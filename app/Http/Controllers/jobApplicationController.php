@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Notifications\JobApplied;
 use Illuminate\Http\Request;
 
 class jobApplicationController extends Controller
@@ -22,9 +23,10 @@ class jobApplicationController extends Controller
      */
     public function store(Job $job, Request $request)
     {
-        $this->authorize('apply', $job);
+        // $this->authorize('apply', $job);
         $jobLink = route('jobs.show', $job);
         $jobTitle = $job->title;
+        $jobId = $job->id;
         $userApplications = route('my-job-applications.index');
 
         $validatedData = $request->validate([
@@ -60,10 +62,20 @@ class jobApplicationController extends Controller
 
         ]);
 
-        $emailController =new EmailController();
+        $emailController = new EmailController();
         $emailController->SendJobApplicationEmail($jobLink, $jobTitle, $userApplications);
 
+        $user = auth()->user();
+        $user->notify(new JobApplied($job));
         return redirect()->route('jobs.show', $job)->with('success', 'job application submitted');
+    }
+
+    public function showNotifications()
+    {
+        $user = auth()->user();
+        $notifications = $user->notifications;
+
+        return view('notifications.index', compact('notifications'));
     }
 
     /**

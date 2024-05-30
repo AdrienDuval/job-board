@@ -7,6 +7,7 @@ use App\Http\Controllers\jobApplicationController;
 use App\Http\Controllers\jobController;
 use App\Http\Controllers\MyJobApplicationController;
 use App\Http\Controllers\MyJobController;
+use App\Http\Controllers\Notifications;
 use App\Models\User;
 use App\Notifications\NewLogin;
 use Illuminate\Support\Facades\Route;
@@ -32,16 +33,19 @@ Route::delete('logout', fn () => to_route('auth.destroy'))->name('logout');
 Route::delete('auth', [AuthController::class, 'destroy'])->name('auth.destroy');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('jobs.application', jobApplicationController::class)->only(['create', 'store']);
+    Route::resource('jobs.application', jobApplicationController::class)->only(['create', 'store', 'showNotifications']);
     Route::resource('my-job-applications', MyJobApplicationController::class)->only(['index', 'destroy']);
 
     Route::resource('employer', EmployerController::class)->only(['create', 'store']);
 
     Route::middleware('employer')->resource('my-jobs', MyJobController::class);
+
+    // Route::get('notifications', Notifications::class);
+    Route::resource('notifications', Notifications::class);
 });
 
 
-Route::get('/test-email', function() {
+Route::get('/test-email', function () {
     $user = User::find(1);
     $userName = $user->name;
     $user->notify(new NewLogin($userName));
