@@ -14,10 +14,7 @@ class jobController extends Controller
     {
         $this->authorize('viewAny', job::class); // Policy Class 
         $filters = request()->only('search', 'min_salary', 'max_salary', 'experience', 'category');
-        $user = auth()->user();
-        $notifications = $user->notifications;
-        $unreadNotifications = $user->unreadNotifications;
-        return view('job.index', ['jobs' => Job::with('employer')->latest()->filter($filters)->get(), 'notifications' => $notifications, 'unreadNotifications' => $unreadNotifications]);
+        return view('job.index', ['jobs' => Job::with('employer')->latest()->filter($filters)->get()]);
     }
 
     /**

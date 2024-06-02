@@ -9,6 +9,7 @@ export default {
         extend: {},
         fontSize: {
             sm: "0.8rem",
+            smm: "0.6rem",
             base: "1rem",
             xl: "1.25rem",
             "2xl": "1.563rem",

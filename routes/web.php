@@ -40,8 +40,11 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('employer')->resource('my-jobs', MyJobController::class);
 
+    // Route::put('notifications/{notifications}', Notifications::class)->only(['index', 'update']);
+    Route::put('notifications/{notification}', [Notifications::class, 'update'])->name('notifications.update');
+    Route::post('notifications/mark-all-read', [Notifications::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
     // Route::get('notifications', Notifications::class);
-    Route::resource('notifications', Notifications::class);
+    // Route::resource('notifications', Notifications::class);
 });
 
 

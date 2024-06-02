@@ -3,28 +3,6 @@
         'Jobs' => route('jobs.index'),
     ]" />
 
-    <h1>Notifications</h1>
-    <ul>
-        @foreach ($unreadNotifications as $notification)
-            <li>
-                @if ($notification->type === 'App\Notifications\JobApplied')
-                    <b>unread Notifications</b>
-                    You applied for the job: {{ $notification->data['job_title'] }}
-                @endif
-            </li>
-        @endforeach
-
-        @foreach ($notifications as $notification)
-            <li>
-                @if ($notification->type === 'App\Notifications\JobApplied')
-                    <b> Notifications</b>
-                    You applied for the job: {{ $notification->data['job_title'] }}
-                @endif
-            </li>
-        @endforeach
-
-
-    </ul>
 
     <x-card class="mb-4 text-sm" x-data="">
 

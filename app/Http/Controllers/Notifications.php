@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 
 class Notifications extends Controller
 {
@@ -54,9 +55,23 @@ class Notifications extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $notificationId)
     {
-        
+        $notification = DatabaseNotification::findOrFail($notificationId);
+        $notification->markAsRead();
+
+        return redirect()->back()->with('success', 'Notification marked as read.');
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $user->unreadNotifications->markAsRead();
+        }
+
+        return redirect()->back()->with('success', 'All notifications marked as read.');
     }
 
     /**
