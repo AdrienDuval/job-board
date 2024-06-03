@@ -5,18 +5,19 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 class NewLogin extends Notification
 {
     use Queueable;
-    public $userName;
+    public $user;
     /**
      * Create a new notification instance.
      */
-    public function __construct($userName)
+    public function __construct($user)
     {
-        $this->userName = $userName;
+        $this->user = $user;
     }
 
     /**
@@ -26,7 +27,7 @@ class NewLogin extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database', 'vonage', 'mail'];
     }
 
     /**
@@ -36,11 +37,28 @@ class NewLogin extends Notification
     {
         return (new MailMessage)
             ->subject('Login Notification')
-            ->greeting('Hello ' . $this->userName . '!')
+            ->greeting('Hello ' . $this->user->name . '!')
             ->line('You have successfully logged into the application.')
             ->line('If this wasn’t you, please contact support immediately.')
             ->action('Visit Dashboard', url('/jobs'))
             ->line('Thank you for using our application!');
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'message_id' => '',
+            'message' => 'User ' . $this->user->name . ' has logged in.',
+            'user_id' => $this->user->id,
+            'type' => 'newLogin'
+        ];
+    }
+
+    public function toVonage($notifiable)
+    {
+        return (new VonageMessage)
+            ->content('New login to you account was detected')
+            ->from(config('vonage.sms_from'));
     }
 
     /**

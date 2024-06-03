@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\Facades\Vonage;
+use Vonage\Client;
 
 class Notifications extends Controller
 {
+    protected $vonage;
+
     /**
      * Display a listing of the resource.
      */
@@ -73,12 +77,24 @@ class Notifications extends Controller
 
         return redirect()->back()->with('success', 'All notifications marked as read.');
     }
+    public function deleteAll(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $user->notifications()->delete();
+        }
+
+        return redirect()->back()->with('success', 'All notifications Deleted');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($user)
     {
-        //
+        $user = auth()->user();
+        return $user->notifications()->delete();
     }
+
 }

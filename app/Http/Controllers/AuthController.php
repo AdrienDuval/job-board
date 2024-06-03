@@ -41,7 +41,12 @@ class AuthController extends Controller
             $userName = $user->name;
             // $message = "my test message";
             // $user->notify(new NewLogin($userName));
-            return redirect()->intended('/')->with('error', 'Welcome back ' . $userName . '😃');
+
+            $user = auth()->user();
+            $user->notify(new NewLogin($user));
+            // dd($response);
+
+            return redirect()->intended('/')->with('success', 'Welcome back ' . $userName . '😃');
         } else {
             return redirect()->back()->with('error', 'invalid credentials');
         }

@@ -43,8 +43,7 @@ Route::middleware('auth')->group(function () {
     // Route::put('notifications/{notifications}', Notifications::class)->only(['index', 'update']);
     Route::put('notifications/{notification}', [Notifications::class, 'update'])->name('notifications.update');
     Route::post('notifications/mark-all-read', [Notifications::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-    // Route::get('notifications', Notifications::class);
-    // Route::resource('notifications', Notifications::class);
+    Route::delete('notifications/delete-all', [Notifications::class, 'deleteAll'])->name('notifications.delete-all');
 });
 
 
@@ -56,3 +55,6 @@ Route::get('/test-email', function () {
 });
 
 Route::get('send-mail', [EmailController::class, 'SendWelcomeEmail']);
+
+
+Route::post('/send-sms', [Notifications::class, 'sendSMS']);

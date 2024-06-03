@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -56,5 +57,10 @@ class User extends Authenticatable
     public function josbApplications()
     {
         return $this->hasMany(JobApplication::class);
+    }
+
+    public function routeNotificationForVonage(Notification $notification): string
+    {
+        return '+917986450366';
     }
 }

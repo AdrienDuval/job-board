@@ -21,9 +21,12 @@ class ShareNotifications
             $user = Auth::user();
             $notifications = $user->notifications;
             $unreadNotifications = $user->unreadNotifications;
+            
 
             view()->share('notifications', $notifications);
             view()->share('unreadNotifications', $unreadNotifications);
+
+
         }
         return $next($request);
     }
